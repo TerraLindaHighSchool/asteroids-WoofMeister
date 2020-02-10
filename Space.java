@@ -11,6 +11,9 @@ public class Space extends World
     private Counter scoreCounter;
     private int startAsteroids = 3;
     private int rgb;
+    private int r;
+    private int g;
+    private int b;
     private int starSize;
 
     /**
@@ -36,6 +39,9 @@ public class Space extends World
         ProtonWave.initializeImages();
         
         rgb = Greenfoot.getRandomNumber(255);
+        //r = Greenfoot.getRandomNumber(255 - 200);
+        //g = Greenfoot.getRandomNumber(255 - 200);
+        //b = Greenfoot.getRandomNumber(255 - 200);
        // starSize = Greenfoot.getRandomNumber(5);
         
         paintStars(300);
@@ -59,18 +65,36 @@ public class Space extends World
     private void paintStars(int count)
     {
         GreenfootImage background = getBackground();
-        background.setColor(new Color(rgb, rgb, rgb));
+        
         for (int i = 0; i < count; i++)
         {
+            RGBColors();
             int x = Greenfoot.getRandomNumber(getWidth());
             int y = Greenfoot.getRandomNumber(getHeight());
-            //rgb = Greenfoot.getRandomNumber(255);
+            
             starSize = Greenfoot.getRandomNumber(5);
             
-            
             background.fillOval(x, y, starSize, starSize);
+            //background.setColor(new Color(r, g, b));
+            if (Greenfoot.getRandomNumber(500) < 10)
+            {
+                background.setColor(new Color(r, g, b));
+            }
+            else
+            {
+                background.setColor(new Color(rgb, rgb, rgb));
+            }
         }
         
+    }
+    
+    public void RGBColors()
+    {
+        
+        r = Greenfoot.getRandomNumber(255 - 0);
+            g = Greenfoot.getRandomNumber(255 - 0);
+            b = Greenfoot.getRandomNumber(255 - 0);
+        rgb = Greenfoot.getRandomNumber(255 - 0);
     }
     
     /**
