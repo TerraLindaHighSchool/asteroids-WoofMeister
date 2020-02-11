@@ -25,7 +25,8 @@ public class Space extends World
         GreenfootImage background = getBackground();
         background.setColor(Color.BLACK);
         background.fill();
-
+        
+        
         Rocket rocket = new Rocket();
         addObject(rocket, getWidth()/2 + 100, getHeight()/2);
         
@@ -37,13 +38,14 @@ public class Space extends World
         Explosion.initializeImages();
         ProtonWave.initializeImages();
         
-        //rgb = Greenfoot.getRandomNumber(255);
-        
+        rgb = Greenfoot.getRandomNumber(255);
         //r = Greenfoot.getRandomNumber(255 - 200);
         //g = Greenfoot.getRandomNumber(255 - 200);
         //b = Greenfoot.getRandomNumber(255 - 200);
        // starSize = Greenfoot.getRandomNumber(5);
+        
         paintStars(300);
+        
     }
     
     /**
@@ -63,12 +65,15 @@ public class Space extends World
     private void paintStars(int count)
     {
         GreenfootImage background = getBackground();
+        
         for (int i = 0; i < count; i++)
         {
             RGBColors();
             int x = Greenfoot.getRandomNumber(getWidth());
             int y = Greenfoot.getRandomNumber(getHeight());
+            
             starSize = Greenfoot.getRandomNumber(5);
+            
             background.fillOval(x, y, starSize, starSize);
             //background.setColor(new Color(r, g, b));
             if (Greenfoot.getRandomNumber(500) < 10)
@@ -80,13 +85,15 @@ public class Space extends World
                 background.setColor(new Color(rgb, rgb, rgb));
             }
         }
+        
     }
     
     public void RGBColors()
     {
+        
         r = Greenfoot.getRandomNumber(255 - 0);
-        g = Greenfoot.getRandomNumber(255 - 0);
-        b = Greenfoot.getRandomNumber(255 - 0);
+            g = Greenfoot.getRandomNumber(255 - 0);
+            b = Greenfoot.getRandomNumber(255 - 0);
         rgb = Greenfoot.getRandomNumber(255 - 0);
     }
     
