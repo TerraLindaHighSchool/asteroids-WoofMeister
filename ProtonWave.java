@@ -1,4 +1,5 @@
 import greenfoot.*;
+import java.util.List;
 
 /**
  * A proton wave that expands and destroys asteroids in its path.
@@ -12,12 +13,15 @@ public class ProtonWave extends Actor
     private static final int DAMAGE = 30;
     
     /** How many images should be used in the animation of the wave */
-    private static final int NUMBER_IMAGES= 30;
+    private static final int NUMBER_IMAGES = 30;
     
     /** 
      * The images of the wave. This is static so the images are not
      * recreated for every object (improves performance significantly).
      */
+    
+    private int currentImage = 0;
+    
     private static GreenfootImage[] images;
     
     /**
@@ -26,6 +30,8 @@ public class ProtonWave extends Actor
     public ProtonWave() 
     {
         initializeImages();
+        setImage(images[0]);
+        Greenfoot.playSound("proton.wav");
     }
     
     /** 
@@ -33,17 +39,15 @@ public class ProtonWave extends Actor
      */
     public static void initializeImages() 
     {
-        if(images == null) 
+        if(images == null)
         {
             GreenfootImage baseImage = new GreenfootImage("wave.png");
             images = new GreenfootImage[NUMBER_IMAGES];
-            int i = 0;
-            while (i < NUMBER_IMAGES) 
+            for(int i = 0; i < NUMBER_IMAGES; i++)
             {
                 int size = (i+1) * ( baseImage.getWidth() / NUMBER_IMAGES );
                 images[i] = new GreenfootImage(baseImage);
                 images[i].scale(size, size);
-                i++;
             }
         }
     }
@@ -53,6 +57,32 @@ public class ProtonWave extends Actor
      */
     public void act()
     { 
+        checkCollision();
+        grow();
+        
+        
     }
     
+    private void grow()
+    {
+         if (currentImage >= NUMBER_IMAGES)
+        {
+            getWorld().removeObject(this);
+        }
+        else
+        {
+            setImage(images[currentImage]);
+            currentImage++;
+        }
+    }
+    
+    private void checkCollision()
+    {
+        int range = getImage().getWidth()/2;
+        List<Asteroid> asteroids = getObjectsInRange(range, Asteroid.class);
+        for (Asteroid a : asteroids)
+        {
+            a.hit(DAMAGE);
+        }
+    }
 }
