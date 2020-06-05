@@ -1,108 +1,61 @@
-import greenfoot.*;
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * A rock in space.
+ * Write a description of class Asteroids here.
  * 
- * @author Poul Henriksen
- * @author Michael Kölling
+ * @author (your name) 
+ * @version (a version number or a date)
  */
-public class Asteroid extends SmoothMover
+public class Asteroid extends Enemy
 {
-    /** Size of this asteroid */
-    private int size;
+    private int Speed;
 
-    /** When the stability reaches 0 the asteroid will explode */
-    private int stability;
-
-
-    /**
-     * Create an asteroid with default size and random direction of movement.
-     */
     public Asteroid()
     {
-        this(50);
-    }
-    
-    /**
-     * Create an asteroid with a given size and random direction of movement.
-     */
-    public Asteroid(int size)
-    {
-        super(new Vector(Greenfoot.getRandomNumber(360), 2));
-        setSize(size);
-    }
-    
-    /**
-     * Create an asteroid with a given size and direction of movement.
-     */
-    public Asteroid(int size, Vector velocity)
-    {
-        super(velocity);
-        setSize(size);
-    }
-    
-    public void act()
-    {         
-        move();
+        Speed = Greenfoot.getRandomNumber(3);
+        //System.out.println(Speed);
+        if (Speed == 0) Speed++;
+        size();
     }
 
     /**
-     * Set the size of this asteroid. Note that stability is directly
-     * related to size. Smaller asteroids are less stable.
+     * Act - do whatever the Asteroids wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public void setSize(int size) 
+    public void act() 
     {
-        stability = size;
-        this.size = size;
+        rotate();
+        setLocation(getX(), getY() + Speed);
+        DIE(); //ALWAYS LAST OR ELSE CRASH IDIOT
+    }    
+
+    private void rotate()
+    {
+        turn(Speed * 2);
+
+    }
+
+    private void size()
+    {
         GreenfootImage image = getImage();
-        image.scale(size, size);
+        image.scale(image.getWidth() + Speed * 10, image.getHeight() + Speed * 10);
+        setImage(image);
     }
 
-    /**
-     * Return the current stability of this asteroid. (If it goes down to 
-     * zero, it breaks up.)
-     */
-    public int getStability() 
+    private void DIE()
     {
-        return stability;
-    }
-    
-    /**
-     * Hit this asteroid dealing the given amount of damage.
-     */
-    public void hit(int damage) 
-    {
-        stability = stability - damage;
-        if (stability <= 0) 
+        
+        if (isAtEdge() || isTouching(Bullet.class)) 
         {
-            breakUp();
-        }
-    }
-    
-    /**
-     * Break up this asteroid. If we are still big enough, this will create two
-     * smaller asteroids. If we are small already, just disappear.
-     */
-    private void breakUp() 
-    {
-        Greenfoot.playSound("Explosion.wav");
-        
-        if (size <= 16) {
-            getWorld().removeObject(this);
-        }
-        else {
-            int r = getVelocity().getDirection() + Greenfoot.getRandomNumber(45);
-            double l = getVelocity().getLength();
-            Vector speed1 = new Vector(r + 60, l * 1.2);
-            Vector speed2 = new Vector(r - 60, l * 1.2);        
-            Asteroid a1 = new Asteroid(size/2, speed1);
-            Asteroid a2 = new Asteroid(size/2, speed2);
-            getWorld().addObject(a1, getX(), getY());
-            getWorld().addObject(a2, getX(), getY());        
-            a1.move();
-            a2.move();
-        
-            getWorld().removeObject(this);
+            if (isAtEdge())
+            {
+               Space space = (Space)getWorld();
+               MyCount counter = space.getMyCount();
+                counter.addScore("Health: ", Speed); 
+               getWorld().addObject(new Explosion(),getX(),getY());
+
+            }
+            getWorld().removeObject(this); 
         }
     }
 }

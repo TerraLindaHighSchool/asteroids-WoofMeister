@@ -1,62 +1,49 @@
-import greenfoot.*;
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * A bullet that can hit asteroids.
+ * Write a description of class bu here.
  * 
- * @author Poul Henriksen
- * @author Michael Kölling
+ * @author (your name) 
+ * @version (a version number or a date)
  */
-public class Bullet extends SmoothMover
+public class Bullet extends Shaft
 {
-    /** The damage this bullet will deal */
-    private static final int damage = 16;
+    private boolean mouseDB = true;
+    GreenfootImage bullet = getImage();
     
-    /** A bullet looses one life each act, and will disappear when life = 0 */
-    private int life = 30;
-    
-    /**
-     * Default constructor for testing.
-     */
     public Bullet()
     {
+
+        bullet.scale(50,10 );
+        bullet.setTransparency(0);
+        setImage(bullet);
     }
-    
+
     /**
-     * Create a bullet with given speed and direction of movement.
+     * Act - do whatever the bu wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public Bullet(Vector speed, int rotation)
+    public void act() 
     {
-        super(speed);
-        setRotation(rotation);
-        addToVelocity(new Vector(rotation, 15));
-        Greenfoot.playSound("EnergyGun.wav");
-    }
-    
-    /**
-     * The bullet will damage asteroids if it hits them.
-     */
-    public void act()
-    {
-        if(life <= 0) {
-            getWorld().removeObject(this);
-        } 
-        else {
-            life--;
-            move();
-            checkAsteroidHit();
+        MouseInfo mouse = Greenfoot.getMouseInfo();
+
+        if (mouse == null){}
+        else
+        {
+            if (mouseDB)
+            {
+                turnTowards(mouse.getX(),mouse.getY());
+
+                mouseDB = false;
+            }
+
         }
-    }
-    
-    /**
-     * Check whether we have hit an asteroid.
-     */
-    private void checkAsteroidHit()
-    {
-        Asteroid asteroid = (Asteroid) getOneIntersectingObject(Asteroid.class);
-        if (asteroid != null)
+        move(10);
+        bullet.setTransparency(60);
+        if (isAtEdge() || isTouching(Asteroid.class))
         {
             getWorld().removeObject(this);
-            asteroid.hit(damage);
         }
-    }
+
+    }    
 }
